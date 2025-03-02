@@ -5,17 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ApplicationMetrics" Version="6.4.1" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.1" />
-    <PackageReference Include="StandardAbstraction" Version="1.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ApplicationMetrics">
-      <HintPath>..\..\ApplicationMetrics\ApplicationMetrics.MetricLoggers\bin\Debug\netstandard2.0\ApplicationMetrics.dll</HintPath>
-    </Reference>
-    <Reference Include="ApplicationMetrics.MetricLoggers">
-      <HintPath>..\..\ApplicationMetrics\ApplicationMetrics.MetricLoggers\bin\Debug\netstandard2.0\ApplicationMetrics.MetricLoggers.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

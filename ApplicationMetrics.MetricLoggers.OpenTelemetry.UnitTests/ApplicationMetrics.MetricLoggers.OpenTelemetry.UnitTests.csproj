@@ -20,13 +20,4 @@
     <ProjectReference Include="..\ApplicationMetrics.MetricLoggers.OpenTelemetry\ApplicationMetrics.MetricLoggers.OpenTelemetry.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="ApplicationMetrics">
-      <HintPath>..\..\ApplicationMetrics\ApplicationMetrics.MetricLoggers\bin\Debug\netstandard2.0\ApplicationMetrics.dll</HintPath>
-    </Reference>
-    <Reference Include="ApplicationMetrics.MetricLoggers">
-      <HintPath>..\..\ApplicationMetrics\ApplicationMetrics.MetricLoggers\bin\Debug\netstandard2.0\ApplicationMetrics.MetricLoggers.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
 </Project>
