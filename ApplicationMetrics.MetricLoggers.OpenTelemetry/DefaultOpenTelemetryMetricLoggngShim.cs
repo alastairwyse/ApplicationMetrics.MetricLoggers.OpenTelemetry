@@ -19,7 +19,7 @@ using System.Diagnostics.Metrics;
 namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
 {
     /// <summary>
-    /// Default implementation of <see cref="IOpenTelemetryMetricLoggngShim"/>.
+    /// Default implementation of <see cref="IOpenTelemetryMetricLoggingShim"/>.
     /// </summary>
     class DefaultOpenTelemetryMetricLoggngShim : IOpenTelemetryMetricLoggingShim
     {

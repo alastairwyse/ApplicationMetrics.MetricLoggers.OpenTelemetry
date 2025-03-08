@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApplicationMetrics.MetricLoggers.OpenTelemetry</name>
+    </assembly>
+    <members>
+        <member name="T:ApplicationMetrics.MetricLoggers.OpenTelemetry.DefaultOpenTelemetryMetricLoggngShim">
+            <summary>
+            Default implementation of <see cref="T:ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim"/>.
+            </summary>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.DefaultOpenTelemetryMetricLoggngShim.AddCounter``1(System.Diagnostics.Metrics.Counter{``0},``0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.DefaultOpenTelemetryMetricLoggngShim.RecordGauge``1(System.Diagnostics.Metrics.Gauge{``0},``0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.DefaultOpenTelemetryMetricLoggngShim.RecordHistogram``1(System.Diagnostics.Metrics.Histogram{``0},``0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim">
+            <summary>
+            Defines methods which log OpenTelemetry metrics.
+            </summary>
+            <remarks>Acts as a <see href="https://en.wikipedia.org/wiki/Shim_(computing)">shim</see> to OpenTelemetry classes for use in unit testing.</remarks>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim.AddCounter``1(System.Diagnostics.Metrics.Counter{``0},``0)">
+            <summary>
+            Calls the <see cref="M:System.Diagnostics.Metrics.Counter`1.Add(`0)">Add()</see> method on the specified <see cref="T:System.Diagnostics.Metrics.Counter`1"/>.
+            </summary>
+            <typeparam name="T">The numerical type of the measurement.</typeparam>
+            <param name="counter">The counter to call Add() against.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim.RecordGauge``1(System.Diagnostics.Metrics.Gauge{``0},``0)">
+            <summary>
+            Calls the <see cref="M:System.Diagnostics.Metrics.Gauge`1.Record(`0)">Record()</see> method on the specified <see cref="T:System.Diagnostics.Metrics.Gauge`1"/>.
+            </summary>
+            <typeparam name="T">The numerical type of the measurement.</typeparam>
+            <param name="gauge">The gauge to call Record() against.</param>
+            <param name="value">The value to record.</param>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim.RecordHistogram``1(System.Diagnostics.Metrics.Histogram{``0},``0)">
+            <summary>
+            Calls the <see cref="M:System.Diagnostics.Metrics.Histogram`1.Record(`0)">Record()</see> method on the specified <see cref="T:System.Diagnostics.Metrics.Histogram`1"/>.
+            </summary>
+            <typeparam name="T">The numerical type of the measurement.</typeparam>
+            <param name="histogram">The histogram to call Record() against.</param>
+            <param name="value">The value to record.</param>
+        </member>
+        <member name="T:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger">
+            <summary>
+            Writes metric events using the <see href="https://opentelemetry.io/docs/specs/otel/protocol/">OpenTelemetry protocol</see>.
+            </summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.amountMetricMappedType">
+            <summary>The type of OpenTelemetry metric that <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> should be mapped to.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.intervalMetricMappedType">
+            <summary>The type of OpenTelemetry metric that <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> should be mapped to.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.countMetricsMap">
+            <summary>Maps types of <see cref="T:ApplicationMetrics.CountMetric">CountMetrics</see> to OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Counter`1">Counters</see>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.amountMetricsCounterMap">
+            <summary>Maps types of <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> to OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Counter`1">Counters</see>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.amountMetricsHistogramMap">
+            <summary>Maps types of <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> to OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Histogram`1">Histograms</see>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.statusMetricsMap">
+            <summary>Maps types of <see cref="T:ApplicationMetrics.StatusMetric">StatusMetrics</see> to OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Gauge`1">Gauges</see>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.intervalMetricsCounterMap">
+            <summary>Maps types of <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> to OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Counter`1">Counters</see>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.intervalMetricsHistogramMap">
+            <summary>Maps types of <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> to OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Histogram`1">Histograms</see>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.metricLoggingShim">
+            <summary>Acts as a <see href="https://en.wikipedia.org/wiki/Shim_(computing)">shim</see> to OpenTelemetry metric logging methods.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.meter">
+            <summary>The underlying <see cref="T:System.Diagnostics.Metrics.Meter"/> object to use to create the OpenTelemetry metric type.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.meterProvider">
+            <summary>The underlying <see cref="T:OpenTelemetry.Metrics.MeterProvider"/> to use to log the metrics.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.dateTime">
+            <summary>Object which provides the current date and time.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.disposed">
+            <summary>Indicates whether the object has been disposed.</summary>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.#ctor(ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit,System.Boolean,System.String,System.Action{OpenTelemetry.Exporter.OtlpExporterOptions})">
+            <summary>
+            Initialises a new instance of the ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger class.
+            </summary>
+            <param name="intervalMetricBaseTimeUnit">The base time unit to use to log interval metrics.</param>
+            <param name="intervalMetricChecking">Specifies whether an exception should be thrown if the correct order of interval metric logging is not followed (e.g. End() method called before Begin()).  Note that this parameter only has an effect when running in 'non-interleaved' mode.</param>
+            <param name="meterName">The name set on the underlying <see cref="T:System.Diagnostics.Metrics.Meter"/> class.</param>
+            <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
+            <remarks>
+              <para>The constructor maps <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> to <see cref="T:System.Diagnostics.Metrics.Counter`1">Counters</see> and <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> to <see cref="T:System.Diagnostics.Metrics.Histogram`1">Histograms</see>.</para>
+              <para>The class uses a <see cref="T:System.Diagnostics.Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="F:ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</para>
+            </remarks>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.#ctor(ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit,System.Boolean,System.Diagnostics.Metrics.MeterOptions,System.Action{OpenTelemetry.Exporter.OtlpExporterOptions})">
+            <summary>
+            Initialises a new instance of the ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger class.
+            </summary>
+            <param name="intervalMetricBaseTimeUnit">The base time unit to use to log interval metrics.</param>
+            <param name="intervalMetricChecking">Specifies whether an exception should be thrown if the correct order of interval metric logging is not followed (e.g. End() method called before Begin()).  Note that this parameter only has an effect when running in 'non-interleaved' mode.</param>
+            <param name="meterOptions">The options to set on the underlying <see cref="T:System.Diagnostics.Metrics.Meter"/> class.</param>
+            <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
+            <remarks>
+              <para>The constructor maps <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> to <see cref="T:System.Diagnostics.Metrics.Counter`1">Counters</see> and <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> to <see cref="T:System.Diagnostics.Metrics.Histogram`1">Histograms</see>.</para>
+              <para>The class uses a <see cref="T:System.Diagnostics.Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="F:ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</para>
+            </remarks>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.#ctor(ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit,System.Boolean,System.Diagnostics.Metrics.MeterOptions,System.Action{OpenTelemetry.Exporter.OtlpExporterOptions},ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType,ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType)">
+            <summary>
+            Initialises a new instance of the ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger class.
+            </summary>
+            <param name="intervalMetricBaseTimeUnit">The base time unit to use to log interval metrics.</param>
+            <param name="intervalMetricChecking">Specifies whether an exception should be thrown if the correct order of interval metric logging is not followed (e.g. End() method called before Begin()).  Note that this parameter only has an effect when running in 'non-interleaved' mode.</param>
+            <param name="meterOptions">The options to set on the underlying <see cref="T:System.Diagnostics.Metrics.Meter"/> class.</param>
+            <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
+            <param name="amountMetricMappedType">The type of OpenTelemetry metric that <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> should be mapped to.</param>
+            <param name="intervalMetricMappedType">The type of OpenTelemetry metric that <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> should be mapped to.</param>
+            <remarks>The class uses a <see cref="T:System.Diagnostics.Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="F:ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</remarks>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.#ctor(ApplicationMetrics.MetricLoggers.IntervalMetricBaseTimeUnit,System.Boolean,System.Diagnostics.Metrics.MeterOptions,System.Action{OpenTelemetry.Exporter.OtlpExporterOptions},ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType,ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType,StandardAbstraction.IStopwatch,ApplicationMetrics.MetricLoggers.IGuidProvider,StandardAbstraction.IDateTime,ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim)">
+            <summary>
+            Initialises a new instance of the ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger class.
+            </summary>
+            <param name="intervalMetricBaseTimeUnit">The base time unit to use to log interval metrics.</param>
+            <param name="intervalMetricChecking">Specifies whether an exception should be thrown if the correct order of interval metric logging is not followed (e.g. End() method called before Begin()).  Note that this parameter only has an effect when running in 'non-interleaved' mode.</param>
+            <param name="meterOptions">The options to set on the underlying <see cref="T:System.Diagnostics.Metrics.Meter"/> class.</param>
+            <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
+            <param name="amountMetricMappedType">The type of OpenTelemetry metric that <see cref="T:ApplicationMetrics.AmountMetric">AmountMetrics</see> should be mapped to.</param>
+            <param name="intervalMetricMappedType">The type of OpenTelemetry metric that <see cref="T:ApplicationMetrics.IntervalMetric">IntervalMetrics</see> should be mapped to.</param>
+            <param name="stopWatch">A test (mock) <see cref="T:StandardAbstraction.IStopwatch"/> object.</param>
+            <param name="guidProvider">A test (mock) <see cref="T:ApplicationMetrics.MetricLoggers.IGuidProvider"/> object.</param>
+            <param name="dateTime">A test (mock) <see cref="T:StandardAbstraction.IDateTime"/> object.</param>
+            <param name="metricLoggingShim">A test (mock) <see cref="T:ApplicationMetrics.MetricLoggers.OpenTelemetry.IOpenTelemetryMetricLoggingShim"/> object.</param>
+            <remarks>This constructor is included to facilitate unit testing.</remarks>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Increment(ApplicationMetrics.CountMetric)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Add(ApplicationMetrics.AmountMetric,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Set(ApplicationMetrics.StatusMetric,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Begin(ApplicationMetrics.IntervalMetric)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.End(ApplicationMetrics.IntervalMetric)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.End(System.Guid,ApplicationMetrics.IntervalMetric)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.CancelBegin(ApplicationMetrics.IntervalMetric)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.CancelBegin(System.Guid,ApplicationMetrics.IntervalMetric)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.ImplementEnd(ApplicationMetrics.MetricLoggers.MetricLoggerBase.UniqueIntervalMetricEventInstance)">
+            <summary>
+            Common implementation for the public End() method which handles processing interval metric 'End' timepoints when interval metrics are mapped to either OpenTelemetry Counters or Gauges.
+            </summary>
+            <param name="intervalMetricEventInstance">An interval metric event instance representing the end of the interval metric.</param>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.RemoveWhitespaceFromString(System.String)">
+            <summary>
+            Remove any whitespace from the specified string.
+            </summary>
+            <remarks>OpenTelemetry ignores any metrics which have whitespace in their name.</remarks>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Dispose">
+            <summary>
+            Releases the unmanaged resources used by the MetricLoggerBuffer.
+            </summary>
+        </member>
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Dispose(System.Boolean)">
+            <summary>
+            Provides a method to free unmanaged resources used by this class.
+            </summary>
+            <param name="disposing">Whether the method is being called as part of an explicit Dispose routine, and hence whether managed resources should also be freed.</param>
+        </member>
+        <member name="T:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType">
+            <summary>
+            Types of metrics defined in OpenTelemetry.
+            </summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType.Counter">
+            <summary>An OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Counter`1"/>.</summary>
+        </member>
+        <member name="F:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricType.Historgram">
+            <summary>An OpenTelemetry <see cref="T:System.Diagnostics.Metrics.Histogram`1"/>.</summary>
+        </member>
+    </members>
+</doc>

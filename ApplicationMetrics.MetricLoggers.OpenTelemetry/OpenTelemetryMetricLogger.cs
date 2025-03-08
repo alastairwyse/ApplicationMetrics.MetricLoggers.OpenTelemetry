@@ -31,15 +31,6 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
     /// </summary>
     public class OpenTelemetryMetricLogger : MetricLoggerBase, IMetricLogger, IDisposable
     {
-        // TODO
-        // Remove standard abstraction reference (main and test projects)
-        // Remove dll links to appMetircs
-        // Add nuget reference to AppMetrics
-        // Add nuspec
-        // Do README.md
-
-
-
         /// <summary>The type of OpenTelemetry metric that <see cref="AmountMetric">AmountMetrics</see> should be mapped to.</summary>
         protected OpenTelemetryMetricType amountMetricMappedType;
         /// <summary>The type of OpenTelemetry metric that <see cref="IntervalMetric">IntervalMetrics</see> should be mapped to.</summary>
@@ -355,7 +346,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                     {
                         if (intervalMetricsCounterMap.ContainsKey(metricType) == false)
                         {
-                            var counter = meter.CreateCounter<Int64>(RemoveWhitespaceFromString(generatedInstance.Item1.Metric.Name), null, generatedInstance.Item1.Metric.Description);
+                            var counter = meter.CreateCounter<Int64>(RemoveWhitespaceFromString(generatedInstance.Item1.Metric.Name), intervalMetricBaseTimeUnit.ToString(), generatedInstance.Item1.Metric.Description);
                             intervalMetricsCounterMap.Add(metricType, counter);
                         }
                     }
@@ -371,7 +362,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                     {
                         if (intervalMetricsHistogramMap.ContainsKey(metricType) == false)
                         {
-                            var counter = meter.CreateHistogram<Int64>(RemoveWhitespaceFromString(generatedInstance.Item1.Metric.Name), null, generatedInstance.Item1.Metric.Description);
+                            var counter = meter.CreateHistogram<Int64>(RemoveWhitespaceFromString(generatedInstance.Item1.Metric.Name), intervalMetricBaseTimeUnit.ToString(), generatedInstance.Item1.Metric.Description);
                             intervalMetricsHistogramMap.Add(metricType, counter);
                         }
                     }

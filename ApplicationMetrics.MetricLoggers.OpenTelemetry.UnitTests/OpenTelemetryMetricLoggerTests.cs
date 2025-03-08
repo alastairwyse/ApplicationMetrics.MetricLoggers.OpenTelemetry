@@ -538,15 +538,84 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry.UnitTests
             Assert.AreEqual(3, loggedValues.Count);
             Assert.AreEqual(new DiskReadTime().Name, loggedHistograms[0].Name);
             Assert.AreEqual(new DiskReadTime().Description, loggedHistograms[0].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Millisecond.ToString(), loggedHistograms[0].Unit);
             Assert.AreEqual(5, loggedValues[0]);
             Assert.AreEqual(testMeterName, loggedHistograms[0].Meter.Name);
             Assert.AreEqual(new DiskWriteTime().Name, loggedHistograms[1].Name);
             Assert.AreEqual(new DiskWriteTime().Description, loggedHistograms[1].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Millisecond.ToString(), loggedHistograms[1].Unit);
             Assert.AreEqual(6, loggedValues[1]);
             Assert.AreEqual(testMeterName, loggedHistograms[1].Meter.Name);
             Assert.AreEqual(new DiskReadTime().Name, loggedHistograms[2].Name);
             Assert.AreEqual(new DiskReadTime().Description, loggedHistograms[2].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Millisecond.ToString(), loggedHistograms[2].Unit);
             Assert.AreEqual(7, loggedValues[2]);
+            Assert.AreEqual(testMeterName, loggedHistograms[2].Meter.Name);
+        }
+
+        [Test]
+        public void Begin_End_IntervalMetricsMappedToHistogramsBaseTimeUnitNanoseconds()
+        {
+            var loggedHistograms = new List<Histogram<Int64>>();
+            var loggedValues = new List<Int64>();
+            mockMetricLoggingShim.RecordHistogram
+            (
+                Arg.Do<Histogram<Int64>>((histogram) => { loggedHistograms.Add(histogram); }),
+                Arg.Do<Int64>((value) => { loggedValues.Add(value); })
+            );
+            mockGuidProvider.NewGuid().Returns
+            (
+                Guid.Parse("00000000-0000-0000-0000-000000000000"),
+                Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                Guid.Parse("00000000-0000-0000-0000-000000000002")
+            );
+            mockStopWatch.ElapsedTicks.Returns<Int64>
+            (
+                10_000,   // Return value for first call to Begin()
+                60_000,   // Return value for first call to End()
+                70_000,   // Return value for second call to Begin()
+                130_000,  // Return value for second call to End()
+                140_000,  // Return value for third call to Begin()
+                210_000   // Return value for third call to End()
+            );
+            testOpenTelemetryMetricLogger.Dispose();
+            testOpenTelemetryMetricLogger = new TestOpenTelemetryMetricLogger
+            (
+                IntervalMetricBaseTimeUnit.Nanosecond,
+                true,
+                testMeterOptions,
+                testOtlpExporterConfigurationAction,
+                OpenTelemetryMetricType.Counter,
+                OpenTelemetryMetricType.Historgram,
+                mockStopWatch,
+                mockGuidProvider,
+                mockDateTime,
+                mockMetricLoggingShim
+            );
+
+            Guid beginId = testOpenTelemetryMetricLogger.Begin(new DiskReadTime());
+            testOpenTelemetryMetricLogger.End(beginId, new DiskReadTime());
+            beginId = testOpenTelemetryMetricLogger.Begin(new DiskWriteTime());
+            testOpenTelemetryMetricLogger.End(beginId, new DiskWriteTime());
+            beginId = testOpenTelemetryMetricLogger.Begin(new DiskReadTime());
+            testOpenTelemetryMetricLogger.End(beginId, new DiskReadTime());
+
+            Assert.AreEqual(3, loggedHistograms.Count);
+            Assert.AreEqual(3, loggedValues.Count);
+            Assert.AreEqual(new DiskReadTime().Name, loggedHistograms[0].Name);
+            Assert.AreEqual(new DiskReadTime().Description, loggedHistograms[0].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Nanosecond.ToString(), loggedHistograms[0].Unit);
+            Assert.AreEqual(5000000, loggedValues[0]);
+            Assert.AreEqual(testMeterName, loggedHistograms[0].Meter.Name);
+            Assert.AreEqual(new DiskWriteTime().Name, loggedHistograms[1].Name);
+            Assert.AreEqual(new DiskWriteTime().Description, loggedHistograms[1].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Nanosecond.ToString(), loggedHistograms[1].Unit);
+            Assert.AreEqual(6000000, loggedValues[1]);
+            Assert.AreEqual(testMeterName, loggedHistograms[1].Meter.Name);
+            Assert.AreEqual(new DiskReadTime().Name, loggedHistograms[2].Name);
+            Assert.AreEqual(new DiskReadTime().Description, loggedHistograms[2].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Nanosecond.ToString(), loggedHistograms[2].Unit);
+            Assert.AreEqual(7000000, loggedValues[2]);
             Assert.AreEqual(testMeterName, loggedHistograms[2].Meter.Name);
         }
 
@@ -601,14 +670,17 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry.UnitTests
             Assert.AreEqual(3, loggedValues.Count);
             Assert.AreEqual(new DiskReadTime().Name, loggedCounters[0].Name);
             Assert.AreEqual(new DiskReadTime().Description, loggedCounters[0].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Millisecond.ToString(), loggedCounters[0].Unit);
             Assert.AreEqual(5, loggedValues[0]);
             Assert.AreEqual(testMeterName, loggedCounters[0].Meter.Name);
             Assert.AreEqual(new DiskWriteTime().Name, loggedCounters[1].Name);
             Assert.AreEqual(new DiskWriteTime().Description, loggedCounters[1].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Millisecond.ToString(), loggedCounters[1].Unit);
             Assert.AreEqual(6, loggedValues[1]);
             Assert.AreEqual(testMeterName, loggedCounters[1].Meter.Name);
             Assert.AreEqual(new DiskReadTime().Name, loggedCounters[2].Name);
             Assert.AreEqual(new DiskReadTime().Description, loggedCounters[2].Description);
+            Assert.AreEqual(IntervalMetricBaseTimeUnit.Millisecond.ToString(), loggedCounters[1].Unit);
             Assert.AreEqual(7, loggedValues[2]);
             Assert.AreEqual(testMeterName, loggedCounters[2].Meter.Name);
         }
