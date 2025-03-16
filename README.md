@@ -58,6 +58,9 @@ The OpenTelemetryMetricLogger class accepts the following constructor parameters
 | amountMetricMappedType | (optional) The type of OpenTelemetry instruments that AmountMetrics are mapped to. |
 | intervalMetricMappedType | (optional) The type of OpenTelemetry instruments that IntervalMetrics are mapped to. |
 
+#### Non-interleaved Method Overloads
+Methods which support ['non-interleaved' interval metric logging](https://github.com/alastairwyse/ApplicationMetrics#interleaved-interval-metrics) (i.e. overloads of End() and CancelBegin() methods which don't accept a Guid) have been configured as explicit implementations on interface [IMetricLogger](https://github.com/alastairwyse/ApplicationMetrics/blob/master/ApplicationMetrics/IMetricLogger.cs).  Hence they cannot be called on an instance of OpenTelemetryMetricLogger without first casting the instance to IMetricLogger.  This is to discourage the use of these methods as they will be deprecated in a future version of ApplicationMetrics.
+
 #### Links
 The documentation below was written for version 1.* of ApplicationMetrics.  Minor implementation details may have changed in versions 2.0.0 and above, however the basic principles and use cases documented are still valid.  Note also that this documentation demonstrates the older ['non-interleaved'](https://github.com/alastairwyse/ApplicationMetrics#interleaved-interval-metrics) method of logging interval metrics.
 
@@ -71,4 +74,5 @@ A detailed sample implementation...<br />
 
 | Version | Changes |
 | ------- | ------- |
+| 1.1.0 | Updated to ApplicationMetrics version 7.0.0. | 
 | 1.0.0 | Initial release. | 

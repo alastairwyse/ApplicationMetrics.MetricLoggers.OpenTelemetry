@@ -158,13 +158,13 @@
         <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.Begin(ApplicationMetrics.IntervalMetric)">
             <inheritdoc/>
         </member>
-        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.End(ApplicationMetrics.IntervalMetric)">
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.ApplicationMetrics#IMetricLogger#End(ApplicationMetrics.IntervalMetric)">
             <inheritdoc/>
         </member>
         <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.End(System.Guid,ApplicationMetrics.IntervalMetric)">
             <inheritdoc/>
         </member>
-        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.CancelBegin(ApplicationMetrics.IntervalMetric)">
+        <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.ApplicationMetrics#IMetricLogger#CancelBegin(ApplicationMetrics.IntervalMetric)">
             <inheritdoc/>
         </member>
         <member name="M:ApplicationMetrics.MetricLoggers.OpenTelemetry.OpenTelemetryMetricLogger.CancelBegin(System.Guid,ApplicationMetrics.IntervalMetric)">

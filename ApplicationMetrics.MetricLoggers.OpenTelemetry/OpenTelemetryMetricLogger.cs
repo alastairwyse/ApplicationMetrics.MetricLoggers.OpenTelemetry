@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using OpenTelemetry;
@@ -67,7 +66,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
         /// <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
         /// <remarks>
         ///   <para>The constructor maps <see cref="AmountMetric">AmountMetrics</see> to <see cref="Counter{T}">Counters</see> and <see cref="IntervalMetric">IntervalMetrics</see> to <see cref="Histogram{T}">Histograms</see>.</para>
-        ///   <para>The class uses a <see cref="Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</para>
+        ///   <para>The class uses a <see cref="System.Diagnostics.Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</para>
         /// </remarks>
         public OpenTelemetryMetricLogger(IntervalMetricBaseTimeUnit intervalMetricBaseTimeUnit, Boolean intervalMetricChecking, String meterName, Action<OtlpExporterOptions> otlpExporterConfigurationAction)
             : this(intervalMetricBaseTimeUnit, intervalMetricChecking, new MeterOptions(meterName), otlpExporterConfigurationAction, OpenTelemetryMetricType.Counter, OpenTelemetryMetricType.Historgram)
@@ -83,7 +82,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
         /// <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
         /// <remarks>
         ///   <para>The constructor maps <see cref="AmountMetric">AmountMetrics</see> to <see cref="Counter{T}">Counters</see> and <see cref="IntervalMetric">IntervalMetrics</see> to <see cref="Histogram{T}">Histograms</see>.</para>
-        ///   <para>The class uses a <see cref="Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</para>
+        ///   <para>The class uses a <see cref="System.Diagnostics.Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</para>
         /// </remarks>
         public OpenTelemetryMetricLogger(IntervalMetricBaseTimeUnit intervalMetricBaseTimeUnit, Boolean intervalMetricChecking, MeterOptions meterOptions, Action<OtlpExporterOptions> otlpExporterConfigurationAction)
             : this(intervalMetricBaseTimeUnit, intervalMetricChecking, meterOptions, otlpExporterConfigurationAction, OpenTelemetryMetricType.Counter, OpenTelemetryMetricType.Historgram)
@@ -99,7 +98,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
         /// <param name="otlpExporterConfigurationAction">An action which configures the underlying OpenTelemetry exporter.</param>
         /// <param name="amountMetricMappedType">The type of OpenTelemetry metric that <see cref="AmountMetric">AmountMetrics</see> should be mapped to.</param>
         /// <param name="intervalMetricMappedType">The type of OpenTelemetry metric that <see cref="IntervalMetric">IntervalMetrics</see> should be mapped to.</param>
-        /// <remarks>The class uses a <see cref="Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</remarks>
+        /// <remarks>The class uses a <see cref="System.Diagnostics.Stopwatch"/> to calculate and log interval metrics.  Since the smallest unit of time supported by Stopwatch is a tick (100 nanoseconds), the smallest level of granularity supported when parameter <paramref name="intervalMetricBaseTimeUnit"/> is set to <see cref="IntervalMetricBaseTimeUnit.Nanosecond"/> is 100 nanoseconds.</remarks>
         public OpenTelemetryMetricLogger
         (
             IntervalMetricBaseTimeUnit intervalMetricBaseTimeUnit, 
@@ -109,7 +108,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
             OpenTelemetryMetricType amountMetricMappedType, 
             OpenTelemetryMetricType intervalMetricMappedType
         )
-            : base(intervalMetricBaseTimeUnit, intervalMetricChecking, new StandardAbstraction.Stopwatch(), new DefaultGuidProvider())
+            : base(intervalMetricBaseTimeUnit, intervalMetricChecking, true, new StandardAbstraction.Stopwatch(), new DefaultGuidProvider())
         {
             if (String.IsNullOrWhiteSpace(meterOptions.Name) == true)
                 throw new ArgumentException($"The meter's '{nameof(meterOptions.Name)}' parmaeter must contain a value.");
@@ -261,7 +260,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
         }
 
         /// <inheritdoc/>
-        public void End(IntervalMetric intervalMetric)
+        void IMetricLogger.End(IntervalMetric intervalMetric)
         {
             if (interleavedIntervalMetricsMode.HasValue == false)
             {
@@ -295,7 +294,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
         }
 
         /// <inheritdoc/>
-        public void CancelBegin(IntervalMetric intervalMetric)
+        void IMetricLogger.CancelBegin(IntervalMetric intervalMetric)
         {
             if (interleavedIntervalMetricsMode.HasValue == false)
             {
