@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
@@ -35,17 +36,17 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
         /// <summary>The type of OpenTelemetry metric that <see cref="IntervalMetric">IntervalMetrics</see> should be mapped to.</summary>
         protected OpenTelemetryMetricType intervalMetricMappedType;
         /// <summary>Maps types of <see cref="CountMetric">CountMetrics</see> to OpenTelemetry <see cref="Counter{T}">Counters</see>.</summary>
-        protected Dictionary<Type, Counter<Int64>> countMetricsMap;
+        protected ConcurrentDictionary<Type, Counter<Int64>> countMetricsMap;
         /// <summary>Maps types of <see cref="AmountMetric">AmountMetrics</see> to OpenTelemetry <see cref="Counter{T}">Counters</see>.</summary>
-        protected Dictionary<Type, Counter<Int64>> amountMetricsCounterMap;
+        protected ConcurrentDictionary<Type, Counter<Int64>> amountMetricsCounterMap;
         /// <summary>Maps types of <see cref="AmountMetric">AmountMetrics</see> to OpenTelemetry <see cref="Histogram{T}">Histograms</see>.</summary>
-        protected Dictionary<Type, Histogram<Int64>> amountMetricsHistogramMap;
+        protected ConcurrentDictionary<Type, Histogram<Int64>> amountMetricsHistogramMap;
         /// <summary>Maps types of <see cref="StatusMetric">StatusMetrics</see> to OpenTelemetry <see cref="Gauge{T}">Gauges</see>.</summary>
-        protected Dictionary<Type, Gauge<Int64>> statusMetricsMap;
+        protected ConcurrentDictionary<Type, Gauge<Int64>> statusMetricsMap;
         /// <summary>Maps types of <see cref="IntervalMetric">IntervalMetrics</see> to OpenTelemetry <see cref="Counter{T}">Counters</see>.</summary>
-        protected Dictionary<Type, Counter<Int64>> intervalMetricsCounterMap;
+        protected ConcurrentDictionary<Type, Counter<Int64>> intervalMetricsCounterMap;
         /// <summary>Maps types of <see cref="IntervalMetric">IntervalMetrics</see> to OpenTelemetry <see cref="Histogram{T}">Histograms</see>.</summary>
-        protected Dictionary<Type, Histogram<Int64>> intervalMetricsHistogramMap;
+        protected ConcurrentDictionary<Type, Histogram<Int64>> intervalMetricsHistogramMap;
         /// <summary>Acts as a <see href="https://en.wikipedia.org/wiki/Shim_(computing)">shim</see> to OpenTelemetry metric logging methods.</summary>
         protected IOpenTelemetryMetricLoggingShim metricLoggingShim;
         /// <summary>The underlying <see cref="Meter"/> object to use to create the OpenTelemetry metric type.</summary>
@@ -115,12 +116,12 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
 
             this.amountMetricMappedType = amountMetricMappedType;
             this.intervalMetricMappedType = intervalMetricMappedType;
-            countMetricsMap = new Dictionary<Type, Counter<Int64>>();
-            amountMetricsCounterMap = new Dictionary<Type, Counter<Int64>>();
-            amountMetricsHistogramMap = new Dictionary<Type, Histogram<Int64>>();
-            statusMetricsMap = new Dictionary<Type, Gauge<Int64>>();
-            intervalMetricsCounterMap = new Dictionary<Type, Counter<Int64>>();
-            intervalMetricsHistogramMap = new Dictionary<Type, Histogram<Int64>>();
+            countMetricsMap = new ConcurrentDictionary<Type, Counter<Int64>>();
+            amountMetricsCounterMap = new ConcurrentDictionary<Type, Counter<Int64>>();
+            amountMetricsHistogramMap = new ConcurrentDictionary<Type, Histogram<Int64>>();
+            statusMetricsMap = new ConcurrentDictionary<Type, Gauge<Int64>>();
+            intervalMetricsCounterMap = new ConcurrentDictionary<Type, Counter<Int64>>();
+            intervalMetricsHistogramMap = new ConcurrentDictionary<Type, Histogram<Int64>>();
             metricLoggingShim = new DefaultOpenTelemetryMetricLoggngShim();
             meter = new Meter(meterOptions); 
             meterProvider = Sdk.CreateMeterProviderBuilder()
@@ -184,7 +185,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                     if (countMetricsMap.ContainsKey(metricType) == false)
                     {
                         var counter = meter.CreateCounter<Int64>(RemoveWhitespaceFromString(countMetric.Name), null, countMetric.Description);
-                        countMetricsMap.Add(metricType, counter);
+                        countMetricsMap.TryAdd(metricType, counter);
                     }
                 }
             }
@@ -205,7 +206,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                         if (amountMetricsCounterMap.ContainsKey(metricType) == false)
                         {
                             var counter = meter.CreateCounter<Int64>(RemoveWhitespaceFromString(amountMetric.Name), null, amountMetric.Description);
-                            amountMetricsCounterMap.Add(metricType, counter);
+                            amountMetricsCounterMap.TryAdd(metricType, counter);
                         }
                     }
                 }
@@ -221,7 +222,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                         if (amountMetricsHistogramMap.ContainsKey(metricType) == false)
                         {
                             var counter = meter.CreateHistogram<Int64>(RemoveWhitespaceFromString(amountMetric.Name), null, amountMetric.Description);
-                            amountMetricsHistogramMap.Add(metricType, counter);
+                            amountMetricsHistogramMap.TryAdd(metricType, counter);
                         }
                     }
                 }
@@ -241,7 +242,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                     if (statusMetricsMap.ContainsKey(metricType) == false)
                     {
                         var gauge = meter.CreateGauge<Int64>(RemoveWhitespaceFromString(statusMetric.Name), null, statusMetric.Description);
-                        statusMetricsMap.Add(metricType, gauge);
+                        statusMetricsMap.TryAdd(metricType, gauge);
                     }
                 }
             }
@@ -346,7 +347,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                         if (intervalMetricsCounterMap.ContainsKey(metricType) == false)
                         {
                             var counter = meter.CreateCounter<Int64>(RemoveWhitespaceFromString(generatedInstance.Item1.Metric.Name), intervalMetricBaseTimeUnit.ToString(), generatedInstance.Item1.Metric.Description);
-                            intervalMetricsCounterMap.Add(metricType, counter);
+                            intervalMetricsCounterMap.TryAdd(metricType, counter);
                         }
                     }
                 }
@@ -362,7 +363,7 @@ namespace ApplicationMetrics.MetricLoggers.OpenTelemetry
                         if (intervalMetricsHistogramMap.ContainsKey(metricType) == false)
                         {
                             var counter = meter.CreateHistogram<Int64>(RemoveWhitespaceFromString(generatedInstance.Item1.Metric.Name), intervalMetricBaseTimeUnit.ToString(), generatedInstance.Item1.Metric.Description);
-                            intervalMetricsHistogramMap.Add(metricType, counter);
+                            intervalMetricsHistogramMap.TryAdd(metricType, counter);
                         }
                     }
                 }

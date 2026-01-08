@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Alastair Wyse</Authors>
     <Company />
     <Description>Unit tests for the ApplicationMetrics.MetricLoggers.OpenTelemetry project.</Description>

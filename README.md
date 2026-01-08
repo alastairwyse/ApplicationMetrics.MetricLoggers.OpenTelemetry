@@ -74,5 +74,6 @@ A detailed sample implementation...<br />
 
 | Version | Changes |
 | ------- | ------- |
+| 1.1.1 | Updated OpenTelemetryMetricLogger to use ConcurrentDictionary internally (prevents potential KeyNotFoundException if Dictionary is added to / resizing during retrieval). | 
 | 1.1.0 | Updated to ApplicationMetrics version 7.0.0. | 
 | 1.0.0 | Initial release. | 

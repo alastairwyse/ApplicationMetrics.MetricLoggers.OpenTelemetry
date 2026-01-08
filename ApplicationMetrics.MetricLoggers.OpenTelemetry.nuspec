@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ApplicationMetrics.MetricLoggers.OpenTelemetry</id>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <authors>Alastair Wyse</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">Apache-2.0</license>
@@ -10,15 +10,15 @@
     <projectUrl>https://github.com/alastairwyse/ApplicationMetrics.MetricLoggers.OpenTelemetry/</projectUrl>
     <description>An ApplicationMetrics metric logger which writes metric and instrumentation events using the OpenTelemetry protocol.</description>
     <summary>An ApplicationMetrics metric logger which writes metric and instrumentation events using the OpenTelemetry protocol</summary>
-    <releaseNotes>Updated to ApplicationMetrics version 7.0.0.</releaseNotes>
-    <copyright>Copyright © Alastair Wyse 2025</copyright>
+    <releaseNotes>Updated OpenTelemetryMetricLogger to use ConcurrentDictionary internally (prevents potential KeyNotFoundException if Dictionary is added to / resizing during retrieval).</releaseNotes>
+    <copyright>Copyright © Alastair Wyse 2026</copyright>
     <tags>metric metrics instrumentation client application counter statistics opentelemetry open telemetry otlp</tags>
     <icon>images\ApplicationMetrics.png</icon>
     <repository type="git" url="https://github.com/alastairwyse/ApplicationMetrics.MetricLoggers.OpenTelemetry/" />
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="ApplicationMetrics" version="7.0.0" exclude="Build,Analyzers" />
-        <dependency id="OpenTelemetry.Exporter.OpenTelemetryProtocol" version="1.11.2" exclude="Build,Analyzers" />
+        <dependency id="OpenTelemetry.Exporter.OpenTelemetryProtocol" version="1.14.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
